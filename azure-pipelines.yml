@@ -19,9 +19,11 @@ steps:
   inputs:
     awsCredentials: 'awsconnection'
     regionName: 'ap-south-1'
-    command: 'deployServerless'
+    command: 'deployFunction'
     packageOnly: false
     lambdaProjectPath: './UpdateLoanStatus'
-    stackName: 'UpdateLoanStatus'
-    s3Bucket: 'pblambdafunctions'
-    s3Prefix: 'UpdateLoanStatus'
+    functionName: 'UpdateLoanStatus'
+    functionRole: 'azure-lambda-role'
+    functionHandler: 'UpdateLoanStatus::UpdateLoanStatus.Function::FunctionHandler'
+    functionMemory: 512
+    functionTimeout: 60
