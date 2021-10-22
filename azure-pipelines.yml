@@ -13,33 +13,15 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: | 
-    dotnet restore UpdateLoanStatus.sln
-    ls
-  displayName: 'dotnet restore'
 
-
-- script: | 
-    dotnet build UpdateLoanStatus.sln
-    ls
-    cd /home/vsts/work/1/s/UpdateLoanStatus/bin/Debug/netcoreapp2.1/
-    ls -al
-    pwd
-  displayName: 'dotnet build'
-
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '/home/vsts/work/1/s/UpdateLoanStatus/bin/Debug/netcoreapp2.1/'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
     
-- task: LambdaDeployFunction@1
+- task: LambdaNETCoreDeploy@1
   inputs:
     awsCredentials: 'awsconnection'
     regionName: 'ap-south-1'
-    deploymentMode: 'codeonly'
-    functionName: 'UpdateLoanStatus'
-    codeLocation: 'localfile'
-    localZipFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    command: 'deployServerless'
+    packageOnly: false
+    lambdaProjectPath: './UpdateLoanStatus'
+    stackName: 'UpdateLoanStatus'
+    s3Bucket: 'pblambdafunctions'
+    s3Prefix: 'UpdateLoanStatus'
