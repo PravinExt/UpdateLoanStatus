@@ -23,7 +23,7 @@ steps:
     packageOnly: false
     lambdaProjectPath: './UpdateLoanStatus'
     functionName: 'UpdateLoanStatus'
-    functionRole: 'azure-lambda-role'
+    functionRole: 'PopularBank-LambdaExecutionRole-7XLQ6YQFOQ1D'
     functionHandler: 'UpdateLoanStatus::UpdateLoanStatus.Function::FunctionHandler'
     functionMemory: 512
     functionTimeout: 60
