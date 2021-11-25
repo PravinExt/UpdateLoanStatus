@@ -14,22 +14,22 @@ variables:
 
 steps:
 - script: | 
-    dotnet restore LoanToDecisionEngine.sln
+    dotnet restore UpdateLoanStatus.sln
     ls
   displayName: 'dotnet restore'
 
 
 - script: | 
-    dotnet build LoanToDecisionEngine.sln
+    dotnet build UpdateLoanStatus.sln
     ls
-    cd /home/vsts/work/1/s/LoanToDecisionEngine/bin/Debug/netcoreapp2.1/
+    cd /home/vsts/work/1/s/UpdateLoanStatus/bin/Debug/netcoreapp2.1/
     ls -al
     pwd
   displayName: 'dotnet build'
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '/home/vsts/work/1/s/LoanToDecisionEngine/bin/Debug/netcoreapp2.1/'
+    rootFolderOrFile: '/home/vsts/work/1/s/UpdateLoanStatus/bin/Debug/netcoreapp2.1/'
     includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
