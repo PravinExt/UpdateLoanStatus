@@ -13,17 +13,42 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- script: | 
+    dotnet restore LoanToDecisionEngine.sln
+    ls
+  displayName: 'dotnet restore'
 
+
+- script: | 
+    dotnet build LoanToDecisionEngine.sln
+    ls
+    cd /home/vsts/work/1/s/LoanToDecisionEngine/bin/Debug/netcoreapp2.1/
+    ls -al
+    pwd
+  displayName: 'dotnet build'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '/home/vsts/work/1/s/LoanToDecisionEngine/bin/Debug/netcoreapp2.1/'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
     
-- task: LambdaNETCoreDeploy@1
+- task: LambdaDeployFunction@1
   inputs:
     awsCredentials: 'awsconnection'
     regionName: 'ap-south-1'
-    command: 'deployFunction'
-    packageOnly: false
-    lambdaProjectPath: './UpdateLoanStatus'
+    deploymentMode: 'codeandconfiguration'
     functionName: 'UpdateLoanStatus'
-    functionRole: 'PopularBank-LambdaExecutionRole-7XLQ6YQFOQ1D'
     functionHandler: 'UpdateLoanStatus::UpdateLoanStatus.Function::FunctionHandler'
-    functionMemory: 512
-    functionTimeout: 60
+    runtime: 'dotnetcore2.1'
+    codeLocation: 'localfile'
+    localZipFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    roleARN: 'cloudform-LambdaExecutionRole-1XRKE2AES4R75'
+    environment: |
+      Database=CreditApproval
+      PWD=admin8910
+      Port=3306
+      Server=applicationsubmission.cikv7fwlsku8.ap-south-1.rds.amazonaws.com
+      UID=admin
