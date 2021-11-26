@@ -47,3 +47,11 @@ steps:
     functionHandler: 'UpdateLoanStatus::UpdateLoanStatus.Function::FunctionHandler'
     functionMemory: 512
     functionTimeout: 3
+
+- task: AWSCLI@1
+  inputs:
+    awsCredentials: 'awsconnection'
+    regionName: 'ap-south-1'
+    awsCommand: 'lambda'
+    awsSubCommand: 'update-function-configuration'
+    awsArguments: '--function-name UpdateLoanStatus --environment "Variables={Database=CreditApproval,PWD=admin8910,Port=3306,Server=applicationsubmission.cikv7fwlsku8.ap-south-1.rds.amazonaws.com,UID=admin}"'
