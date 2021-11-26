@@ -35,20 +35,15 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
     
-- task: LambdaDeployFunction@1
+- task: LambdaNETCoreDeploy@1
   inputs:
     awsCredentials: 'awsconnection'
     regionName: 'ap-south-1'
-    deploymentMode: 'codeandconfiguration'
+    command: 'deployFunction'
+    packageOnly: false
+    lambdaProjectPath: './UpdateLoanStatus'
     functionName: 'UpdateLoanStatus'
+    functionRole: 'cloudform-LambdaExecutionRole-1XRKE2AES4R75'
     functionHandler: 'UpdateLoanStatus::UpdateLoanStatus.Function::FunctionHandler'
-    runtime: 'dotnetcore2.1'
-    codeLocation: 'localfile'
-    localZipFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    roleARN: 'cloudform-LambdaExecutionRole-1XRKE2AES4R75'
-    environment: |
-      Database=CreditApproval
-      PWD=admin8910
-      Port=3306
-      Server=applicationsubmission.cikv7fwlsku8.ap-south-1.rds.amazonaws.com
-      UID=admin
+    functionMemory: 512
+    functionTimeout: 3
