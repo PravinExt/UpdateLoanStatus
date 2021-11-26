@@ -46,7 +46,7 @@ steps:
     functionRole: 'cloudform-LambdaExecutionRole-1XRKE2AES4R75'
     functionHandler: 'UpdateLoanStatus::UpdateLoanStatus.Function::FunctionHandler'
     functionMemory: 512
-    functionTimeout: 3
+    functionTimeout: 50
 
 - task: AWSCLI@1
   inputs:
