@@ -82,6 +82,37 @@ namespace UpdateLoanStatus
                 dbHelper = null;
             }
         }
+
+        public int Get_ExternalID_by_LoanID(int CreditorAssigned_ID)
+        {
+            DBHelper dbHelper = new DBHelper();
+            int External_ID = 0;
+            try
+            {
+
+                dbHelper.Connect(dbHelper.GetConnStr());
+
+                MySqlParameter[] loan_para = new MySqlParameter[1];
+                loan_para[0] = new MySqlParameter("CreditorAssigned_ID", CreditorAssigned_ID);
+                MySqlDataReader loanReader = dbHelper.ExecuteReader("Get_LoansDetails_By_ID", DBHelper.QueryType.StotedProcedure, loan_para);
+
+                while (loanReader.Read())
+                {
+                    External_ID = int.Parse(loanReader["External_ID"].ToString());
+                }
+
+                return External_ID;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                dbHelper.DisConnect();
+                dbHelper = null;
+            }
+        }
     }
 
     public class DBHelper
@@ -111,7 +142,14 @@ namespace UpdateLoanStatus
 
         public string GetConnStr()
         {
-            string sConnectionString = "server = applicationsubmission.cikv7fwlsku8.ap-south-1.rds.amazonaws.com; port = 3306; uid = admin; pwd = admin8910; database = CreditApproval";
+            string Server = Environment.GetEnvironmentVariable("Server");
+            string Port = Environment.GetEnvironmentVariable("Port");
+            string UID = Environment.GetEnvironmentVariable("UID");
+            string PWD = Environment.GetEnvironmentVariable("PWD");
+            string Database = Environment.GetEnvironmentVariable("Database");
+
+            //string sConnectionString = "server = applicationsubmission.cikv7fwlsku8.ap-south-1.rds.amazonaws.com; port = 3306; uid = admin; pwd = admin8910; database = CreditApproval";
+            string sConnectionString = "server = " + Server + "; port = " + Port + "; uid = " + UID + "; pwd = " + PWD + "; database = " + Database;
             return sConnectionString;
         }
 

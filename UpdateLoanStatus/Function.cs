@@ -25,17 +25,32 @@ namespace UpdateLoanStatus
             bool IsClosed = false;
             Loan loandetail = new Loan();
 
-            //Check the if the loan application has closed.
+            //Check if the loan application has closed.
             IsClosed = loandetail.CheckIsClosed(input.CreditorAssigned_ID);
 
             if (IsClosed == false)
             {
+                input.External_ID = loandetail.Get_ExternalID_by_LoanID(input.CreditorAssigned_ID);
                 //Update Loan Status
                 loandetail.Update_LoanInfo(input);
+
+                if (input.LoanApplication_Status == 8)
+                {
+                    input.LoanApplication_BankerComment = "Closed by External Service";
+                }
+                if (input.LoanApplication_Status == 5)
+                {
+                    input.LoanApplication_BankerComment = "Approved";
+                }
+                if (input.LoanApplication_Status == 6)
+                {
+                    input.LoanApplication_BankerComment = "Sent To Decision Engine";
+                }
             }
             else
             {
                 input.LoanApplication_Status = 8;
+                input.LoanApplication_BankerComment = "Closed by External Service";
             }
 
 
